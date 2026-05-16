@@ -22,6 +22,10 @@ Install all skills:
 npx https://github.com/thaitantai/coding-agent-skills --all
 ```
 
+By default, skills are installed into the current directory where you run `npx`.
+For example, running from `F:\Projects\mcp-manager-server` installs skill folders
+directly under `F:\Projects\mcp-manager-server`.
+
 Replace an existing local skill:
 
 ```powershell
@@ -34,7 +38,13 @@ Install to a custom destination:
 npx https://github.com/thaitantai/coding-agent-skills --skill lean-execution --dest C:\tmp\codex-skills
 ```
 
-The default destination is:
+Install to global Codex skills:
+
+```powershell
+npx https://github.com/thaitantai/coding-agent-skills --all --global
+```
+
+The global destination is:
 
 - `$env:CODEX_HOME\skills` when `CODEX_HOME` is set.
 - Otherwise `%USERPROFILE%\.codex\skills`.

@@ -17,7 +17,8 @@ Options:
   --skill <name>     Install one skill
   --all              Install all skills
   --list             List available skills
-  --dest <path>      Install destination (default: CODEX_HOME/skills or ~/.codex/skills)
+  --dest <path>      Install destination (default: current working directory)
+  --global           Install to CODEX_HOME/skills or ~/.codex/skills
   --force            Replace existing skill directory
   --help             Show help`;
 }
@@ -28,6 +29,7 @@ function parseArgs(argv) {
     all: false,
     list: false,
     dest: null,
+    global: false,
     force: false,
     help: false
   };
@@ -42,6 +44,8 @@ function parseArgs(argv) {
       args.list = true;
     } else if (arg === "--dest") {
       args.dest = argv[++i];
+    } else if (arg === "--global") {
+      args.global = true;
     } else if (arg === "--force") {
       args.force = true;
     } else if (arg === "--help" || arg === "-h") {
@@ -55,10 +59,14 @@ function parseArgs(argv) {
     throw new Error("Choose --skill <name>, --all, or --list.");
   }
 
+  if (args.dest && args.global) {
+    throw new Error("Use either --dest <path> or --global, not both.");
+  }
+
   return args;
 }
 
-function defaultDest() {
+function globalDest() {
   const codexHome = process.env.CODEX_HOME;
   if (codexHome) {
     return path.join(codexHome, "skills");
@@ -70,6 +78,18 @@ function defaultDest() {
   }
 
   return path.join(home, ".codex", "skills");
+}
+
+function defaultDest(args) {
+  if (args.dest) {
+    return args.dest;
+  }
+
+  if (args.global) {
+    return globalDest();
+  }
+
+  return process.cwd();
 }
 
 async function listSkills() {
@@ -132,7 +152,7 @@ async function main() {
   }
 
   const selected = args.all ? skills : [args.skill];
-  const destRoot = path.resolve(args.dest || defaultDest());
+  const destRoot = path.resolve(defaultDest(args));
   const installed = [];
 
   for (const skill of selected) {
