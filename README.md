@@ -7,31 +7,31 @@ Install Codex skills from this repository.
 List skills:
 
 ```powershell
-npx github:thaitantai/coding-agent-skills --list
+npx https://github.com/thaitantai/coding-agent-skills --list
 ```
 
 Install one skill:
 
 ```powershell
-npx github:thaitantai/coding-agent-skills --skill lean-execution
+npx https://github.com/thaitantai/coding-agent-skills --skill lean-execution
 ```
 
 Install all skills:
 
 ```powershell
-npx github:thaitantai/coding-agent-skills --all
+npx https://github.com/thaitantai/coding-agent-skills --all
 ```
 
 Replace an existing local skill:
 
 ```powershell
-npx github:thaitantai/coding-agent-skills --skill lean-execution --force
+npx https://github.com/thaitantai/coding-agent-skills --skill lean-execution --force
 ```
 
 Install to a custom destination:
 
 ```powershell
-npx github:thaitantai/coding-agent-skills --skill lean-execution --dest C:\tmp\codex-skills
+npx https://github.com/thaitantai/coding-agent-skills --skill lean-execution --dest C:\tmp\codex-skills
 ```
 
 The default destination is:
@@ -41,15 +41,18 @@ The default destination is:
 
 ## URL Form
 
-Prefer the GitHub package spec:
+Preferred URL form:
+
+```powershell
+npx https://github.com/thaitantai/coding-agent-skills --skill lean-execution
+```
+
+Equivalent GitHub package spec:
 
 ```powershell
 npx github:thaitantai/coding-agent-skills --skill lean-execution
 ```
 
-If using a URL package spec, npm may require the git protocol prefix:
-
-```powershell
-npx git+https://github.com/thaitantai/coding-agent-skills.git --skill lean-execution
-```
-
+If npm reports `UNABLE_TO_VERIFY_LEAF_SIGNATURE`, fix the local npm/Node
+certificate configuration or corporate proxy CA. The installer is being reached,
+but npm cannot verify GitHub's tarball certificate.
