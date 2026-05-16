@@ -1,0 +1,33 @@
+{
+  "name": "coding-agent-skills",
+  "version": "0.1.0",
+  "description": "Installer for Codex agent skills.",
+  "type": "module",
+  "bin": {
+    "coding-agent-skills": "./bin/install-skills.mjs"
+  },
+  "files": [
+    "AGENTS.md",
+    "TOKEN_BUDGET_POLICY.md",
+    "bin/",
+    "brainstorming/",
+    "dispatching-parallel-agents/",
+    "executing-plans/",
+    "finishing-a-development-branch/",
+    "lean-execution/",
+    "receiving-code-review/",
+    "requesting-code-review/",
+    "subagent-driven-development/",
+    "systematic-debugging/",
+    "test-driven-development/",
+    "using-git-worktrees/",
+    "using-superpowers/",
+    "verification-before-completion/",
+    "writing-plans/",
+    "writing-skills/"
+  ],
+  "scripts": {
+    "test": "node ./bin/install-skills.mjs --list"
+  },
+  "license": "MIT"
+}
