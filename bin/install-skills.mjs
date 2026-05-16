@@ -11,11 +11,13 @@ function usage() {
   return `Usage:
   npx github:thaitantai/coding-agent-skills --skill <skill-name>
   npx github:thaitantai/coding-agent-skills --all
+  npx github:thaitantai/coding-agent-skills --uninstall --skill <skill-name>
   npx github:thaitantai/coding-agent-skills --list
 
 Options:
   --skill <name>     Install one skill
   --all              Install all skills
+  --uninstall        Uninstall selected skill(s)
   --list             List available skills
   --dest <path>      Install destination (default: current working directory)
   --global           Install to CODEX_HOME/skills or ~/.codex/skills
@@ -27,6 +29,7 @@ function parseArgs(argv) {
   const args = {
     skill: null,
     all: false,
+    uninstall: false,
     list: false,
     dest: null,
     global: false,
@@ -40,6 +43,8 @@ function parseArgs(argv) {
       args.skill = argv[++i];
     } else if (arg === "--all") {
       args.all = true;
+    } else if (arg === "--uninstall") {
+      args.uninstall = true;
     } else if (arg === "--list") {
       args.list = true;
     } else if (arg === "--dest") {
@@ -57,6 +62,10 @@ function parseArgs(argv) {
 
   if (!args.help && !args.list && !args.all && !args.skill) {
     throw new Error("Choose --skill <name>, --all, or --list.");
+  }
+
+  if (args.skill && args.all) {
+    throw new Error("Use either --skill <name> or --all, not both.");
   }
 
   if (args.dest && args.global) {
@@ -138,6 +147,30 @@ async function copySkill(skillName, destRoot, force) {
   return target;
 }
 
+async function removeSkill(skillName, destRoot) {
+  if (!/^[a-z0-9-]+$/.test(skillName)) {
+    throw new Error(`Invalid skill name: ${skillName}`);
+  }
+
+  const target = path.join(destRoot, skillName);
+  if (!existsSync(target)) {
+    return { target, removed: false };
+  }
+
+  const info = await stat(target);
+  if (!info.isDirectory()) {
+    throw new Error(`Target exists but is not a directory: ${target}`);
+  }
+
+  const skillFile = path.join(target, "SKILL.md");
+  if (!existsSync(skillFile)) {
+    throw new Error(`Refusing to remove ${target}: missing SKILL.md`);
+  }
+
+  await rm(target, { recursive: true, force: true });
+  return { target, removed: true };
+}
+
 async function main() {
   const args = parseArgs(process.argv.slice(2));
   if (args.help) {
@@ -153,6 +186,22 @@ async function main() {
 
   const selected = args.all ? skills : [args.skill];
   const destRoot = path.resolve(defaultDest(args));
+
+  if (args.uninstall) {
+    const results = [];
+    for (const skill of selected) {
+      results.push(await removeSkill(skill, destRoot));
+    }
+
+    const removed = results.filter((result) => result.removed);
+    console.log(`Uninstalled ${removed.length} skill(s) from ${destRoot}`);
+    for (const result of results) {
+      const mark = result.removed ? "-" : "not found:";
+      console.log(`${mark} ${path.basename(result.target)}`);
+    }
+    return;
+  }
+
   const installed = [];
 
   for (const skill of selected) {

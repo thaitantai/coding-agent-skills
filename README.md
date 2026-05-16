@@ -32,16 +32,40 @@ Replace an existing local skill:
 npx https://github.com/thaitantai/coding-agent-skills --skill lean-execution --force
 ```
 
+Uninstall one skill from the current directory:
+
+```powershell
+npx https://github.com/thaitantai/coding-agent-skills --uninstall --skill lean-execution
+```
+
+Uninstall all skills from the current directory:
+
+```powershell
+npx https://github.com/thaitantai/coding-agent-skills --uninstall --all
+```
+
 Install to a custom destination:
 
 ```powershell
 npx https://github.com/thaitantai/coding-agent-skills --skill lean-execution --dest C:\tmp\codex-skills
 ```
 
+Uninstall from a custom destination:
+
+```powershell
+npx https://github.com/thaitantai/coding-agent-skills --uninstall --skill lean-execution --dest C:\tmp\codex-skills
+```
+
 Install to global Codex skills:
 
 ```powershell
 npx https://github.com/thaitantai/coding-agent-skills --all --global
+```
+
+Uninstall from global Codex skills:
+
+```powershell
+npx https://github.com/thaitantai/coding-agent-skills --uninstall --skill lean-execution --global
 ```
 
 The global destination is:
